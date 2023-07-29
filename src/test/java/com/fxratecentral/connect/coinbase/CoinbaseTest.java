@@ -9,6 +9,7 @@ import com.fxratecentral.connect.util.JsonUtil;
 import com.fxratecentral.connect.util.SignatureUtil;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,8 +42,8 @@ public class CoinbaseTest {
         final var currencyPair = new CurrencyPair("BTC", "USDT");
         final var startInclusive = Instant.parse("2023-01-01T00:00:00Z");
         final var endExclusive = Instant.parse("2023-01-01T01:00:00Z");
-        final var granularity = CoinbaseProductCandleGranularity.ONE_MINUTE;
-        final var candlesticks = coinbase.getCandlesticks(currencyPair, startInclusive, endExclusive, granularity);
+        final var temporalUnit = ChronoUnit.MINUTES;
+        final var candlesticks = coinbase.getCandlesticks(currencyPair, startInclusive, endExclusive, temporalUnit);
         final var candlestickArray = candlesticks.toArray(Candlestick[]::new);
 
         // First candlestick
@@ -72,9 +73,9 @@ public class CoinbaseTest {
         final var currencyPair = new CurrencyPair("BTC", "USDT");
         final var startInclusive = Instant.parse("2023-01-01T00:00:00Z");
         final var endExclusive = Instant.parse("2023-01-01T05:01:00Z");
-        final var granularity = CoinbaseProductCandleGranularity.ONE_MINUTE;
+        final var temporalUnit = ChronoUnit.MINUTES;
         final var e = assertThrows(CoinbaseException.class,
-                () -> coinbase.getCandlesticks(currencyPair, startInclusive, endExclusive, granularity));
+                () -> coinbase.getCandlesticks(currencyPair, startInclusive, endExclusive, temporalUnit));
         assertEquals("Too many product candles requested.", e.getMessage());
     }
 }

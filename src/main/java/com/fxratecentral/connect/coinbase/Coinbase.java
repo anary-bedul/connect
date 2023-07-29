@@ -1,16 +1,18 @@
 package com.fxratecentral.connect.coinbase;
 
 import com.fxratecentral.connect.Candlestick;
+import com.fxratecentral.connect.CandlestickProvider;
 import com.fxratecentral.connect.CurrencyPair;
 import com.fxratecentral.connect.util.HttpUtil;
 import com.fxratecentral.connect.KeyVault;
 import com.fxratecentral.connect.util.SignatureUtil;
 import java.time.Instant;
+import java.time.temporal.TemporalUnit;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 
-public final class Coinbase {
+public final class Coinbase implements CandlestickProvider {
     private static final String VALUE_ACCESS_KEY = "CB_ACCESS_KEY";
     private static final String VALUE_SECRET_KEY = "CB_SECRET_KEY";
     private static final String BASE_URI = "https://api.coinbase.com";
@@ -34,17 +36,25 @@ public final class Coinbase {
         this.keyVault = keyVault;
     }
 
+    @Override
     public Collection<Candlestick> getCandlesticks(
             final CurrencyPair currencyPair,
             final Instant startInclusive,
             final Instant endExclusive,
-            final CoinbaseProductCandleGranularity granularity
+            final TemporalUnit temporalUnit
     ) {
-        if (startInclusive.until(endExclusive, granularity.getTemporalUnit()) > MAX_PRODUCT_CANDLES_PER_REQUEST) {
+        if (startInclusive.until(endExclusive, temporalUnit) > MAX_PRODUCT_CANDLES_PER_REQUEST) {
             throw new CoinbaseException("Too many product candles requested.");
         }
+
+        final var granularity = CoinbaseProductCandleGranularityConverter.convert(temporalUnit);
         final var productId = currencyPair.toString("-");
-        final var productCandleResponse = getProductCandles(productId, granularity, startInclusive, endExclusive);
+        final var productCandleResponse = getProductCandles(
+                productId,
+                granularity,
+                String.valueOf(startInclusive.truncatedTo(temporalUnit).getEpochSecond()),
+                String.valueOf(endExclusive.truncatedTo(temporalUnit).getEpochSecond())
+        );
         return productCandleResponse
                 .candles()
                 .stream()
@@ -55,14 +65,15 @@ public final class Coinbase {
 
     private CoinbaseProductCandleResponse getProductCandles(
             final String productId,
-            final CoinbaseProductCandleGranularity granularity,
-            final Instant startInclusive,
-            final Instant endExclusive) {
+            final String start,
+            final String end,
+            final String granularity
+    ) {
         final var endpoint = String.format("/v3/brokerage/products/%s/candles", productId);
         final var queryParameters = Map.<String, Object>of(
-                "start", String.valueOf(startInclusive.truncatedTo(granularity.getTemporalUnit()).getEpochSecond()),
-                "end", String.valueOf(endExclusive.truncatedTo(granularity.getTemporalUnit()).getEpochSecond()),
-                "granularity", granularity.name()
+                "start", start,
+                "end", end,
+                "granularity", granularity
         );
         return get(CoinbaseProductCandleResponse.class, endpoint, queryParameters);
     }
