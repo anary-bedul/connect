@@ -1,0 +1,50 @@
+plugins {
+    id 'java-library'
+    id 'jacoco'
+    id 'checkstyle'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation('jakarta.ws.rs:jakarta.ws.rs-api:latest.release')
+    implementation('org.glassfish.jersey.core:jersey-common:latest.release')
+    implementation('com.google.code.gson:gson:latest.release')
+    testImplementation('org.junit.jupiter:junit-jupiter:latest.release')
+    testImplementation('org.mockito:mockito-junit-jupiter:latest.release')
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(19)
+    }
+}
+
+jar {
+    archiveBaseName = 'fxratecentral-connect'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacoco {
+    toolVersion = '0.8.10'
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        csv.required = true
+    }
+}
+
+checkstyle {
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    showViolations = true
+}
