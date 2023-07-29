@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 
-public final class Coinbase implements CandlestickProvider {
+public final class Coinbase extends CandlestickProvider {
     private static final String VALUE_ACCESS_KEY = "CB_ACCESS_KEY";
     private static final String VALUE_SECRET_KEY = "CB_SECRET_KEY";
     private static final String BASE_URI = "https://api.coinbase.com";
@@ -22,18 +22,13 @@ public final class Coinbase implements CandlestickProvider {
     private static final String HEADER_CB_VERSION = "CB-VERSION";
     private static final String CB_VERSION = "2023-01-09";
     private static final int MAX_PRODUCT_CANDLES_PER_REQUEST = 300;
-    private final HttpUtil httpUtil;
-    private final SignatureUtil signatureUtil;
-    private final KeyVault keyVault;
 
     public Coinbase(
             final HttpUtil httpUtil,
             final SignatureUtil signatureUtil,
             final KeyVault keyVault
     ) {
-        this.httpUtil = httpUtil;
-        this.signatureUtil = signatureUtil;
-        this.keyVault = keyVault;
+        super(httpUtil, signatureUtil, keyVault);
     }
 
     @Override
