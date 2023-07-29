@@ -1,4 +1,5 @@
 ![GitHub](https://img.shields.io/github/license/fxratecentral/connect)
+[![Build and Test](https://github.com/fxratecentral/connect/actions/workflows/build-test.yml/badge.svg)](https://github.com/fxratecentral/connect/actions/workflows/build-test.yml)
 ![](.github/badges/jacoco.svg)
 
 ## Supported Cryptocurrency Exchange Markets
