@@ -41,6 +41,7 @@ public final class HttpUtil {
             final var responseHandler = HttpResponse.BodyHandlers.ofString();
             final var response = httpClient.send(request, responseHandler);
             final var responseBody = response.body();
+            System.out.println(responseBody);
             return jsonUtil.fromJson(responseBody, responseClass);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Failed to execute.", e);

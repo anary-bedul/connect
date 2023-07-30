@@ -4,7 +4,7 @@ import com.fxratecentral.connect.Candlestick;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public class CoinbaseProductCandleConverter {
+public final class CoinbaseProductCandleConverter {
     private CoinbaseProductCandleConverter() {
         // Non-instantiable class
     }

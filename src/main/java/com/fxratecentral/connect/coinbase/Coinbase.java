@@ -41,7 +41,6 @@ public final class Coinbase extends CandlestickProvider {
         if (startInclusive.until(endExclusive, temporalUnit) > MAX_PRODUCT_CANDLES_PER_REQUEST) {
             throw new CoinbaseException("Too many product candles requested.");
         }
-
         final var granularity = CoinbaseProductCandleGranularityConverter.convert(temporalUnit);
         final var productId = currencyPair.toString("-");
         final var productCandleResponse = getProductCandles(
