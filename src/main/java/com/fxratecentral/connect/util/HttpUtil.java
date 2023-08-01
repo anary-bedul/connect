@@ -16,27 +16,30 @@ public final class HttpUtil {
     }
 
     public HttpUtil(
-            final HttpClient httpClient,
-            final UriUtil uriUtil,
-            final JsonUtil jsonUtil) {
+        final HttpClient httpClient,
+        final UriUtil uriUtil,
+        final JsonUtil jsonUtil
+    ) {
         this.httpClient = httpClient;
         this.jsonUtil = jsonUtil;
         this.uriUtil = uriUtil;
     }
 
     public <T> T get(
-            final Class<T> responseClass,
-            final String uriString,
-            final String[] headers,
-            final Map<String, Object> queryParameters) {
+        final Class<T> responseClass,
+        final String uriString,
+        final String[] headers,
+        final Map<String, Object> queryParameters
+    ) {
         final var uri = uriUtil.buildUri(uriString, queryParameters);
         final var request = HttpRequest.newBuilder(uri).headers(headers).GET().build();
         return execute(responseClass, request);
     }
 
     private <T> T execute(
-            final Class<T> responseClass,
-            final HttpRequest request) {
+        final Class<T> responseClass,
+        final HttpRequest request
+    ) {
         try {
             final var responseHandler = HttpResponse.BodyHandlers.ofString();
             final var response = httpClient.send(request, responseHandler);

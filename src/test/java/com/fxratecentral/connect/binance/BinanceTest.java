@@ -25,13 +25,13 @@ import static org.mockito.Mockito.when;
 public class BinanceTest {
     private final JsonUtil jsonUtil = new JsonUtil();
     @Mock
-    HttpUtil httpUtil;
+    private HttpUtil httpUtil;
     @Mock
-    SignatureUtil signatureUtil;
+    private SignatureUtil signatureUtil;
     @Mock
-    KeyVault keyVault;
+    private KeyVault keyVault;
     @InjectMocks
-    Binance binance;
+    private Binance binance;
 
     @Test
     public void testGetCandlesticks() {
@@ -72,7 +72,7 @@ public class BinanceTest {
         final var endExclusive = Instant.parse("2010-12-31T16:42:00Z");
         final var temporalUnit = ChronoUnit.MINUTES;
         final var e = assertThrows(BinanceException.class,
-                () -> binance.getCandlesticks(currencyPair, startInclusive, endExclusive, temporalUnit));
+            () -> binance.getCandlesticks(currencyPair, startInclusive, endExclusive, temporalUnit));
         assertEquals("Too many klines requested.", e.getMessage());
     }
 }

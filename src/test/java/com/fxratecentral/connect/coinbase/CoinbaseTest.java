@@ -25,13 +25,13 @@ import static org.mockito.Mockito.when;
 public class CoinbaseTest {
     private final JsonUtil jsonUtil = new JsonUtil();
     @Mock
-    HttpUtil httpUtil;
+    private HttpUtil httpUtil;
     @Mock
-    SignatureUtil signatureUtil;
+    private SignatureUtil signatureUtil;
     @Mock
-    KeyVault keyVault;
+    private KeyVault keyVault;
     @InjectMocks
-    Coinbase coinbase;
+    private Coinbase coinbase;
 
     @Test
     public void testGetCandlesticks() {
@@ -75,7 +75,7 @@ public class CoinbaseTest {
         final var endExclusive = Instant.parse("2023-01-01T05:01:00Z");
         final var temporalUnit = ChronoUnit.MINUTES;
         final var e = assertThrows(CoinbaseException.class,
-                () -> coinbase.getCandlesticks(currencyPair, startInclusive, endExclusive, temporalUnit));
+            () -> coinbase.getCandlesticks(currencyPair, startInclusive, endExclusive, temporalUnit));
         assertEquals("Too many product candles requested.", e.getMessage());
     }
 }

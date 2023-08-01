@@ -9,11 +9,11 @@ public final class TestUtil {
     }
 
     public static <T> T readJsonResource(
-            final JsonUtil jsonUtil,
-            final String resourceFilename,
-            final Class<T> responseClass
+        final JsonUtil jsonUtil,
+        final String resourceFilename,
+        final Class<T> responseClass
     ) {
-        try (final var inputStream = TestUtil.class.getClassLoader().getResourceAsStream(resourceFilename)) {
+        try (var inputStream = TestUtil.class.getClassLoader().getResourceAsStream(resourceFilename)) {
             final var rawJson = new String(inputStream.readAllBytes());
             return jsonUtil.fromJson(rawJson, responseClass);
         } catch (IOException e) {

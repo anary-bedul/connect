@@ -38,7 +38,7 @@ public class HttpUtilTest {
         final var headers = new String[] {"testKey", "testValue"};
         final var queryParameters = Map.<String, Object>of();
         final var response = httpUtil.get(TestObject.class, url, headers, queryParameters);
-        Assertions.assertEquals("abc", response.field1);
-        Assertions.assertEquals(12345, response.field2);
+        Assertions.assertEquals("abc", response.field1());
+        Assertions.assertEquals(12345, response.field2());
     }
 }

@@ -1,7 +1,7 @@
 package com.fxratecentral.connect.binance;
 
 import com.fxratecentral.connect.Candlestick;
-import com.fxratecentral.connect.CandlestickProvider;
+import com.fxratecentral.connect.AbstractCandlestickProvider;
 import com.fxratecentral.connect.CurrencyPair;
 import com.fxratecentral.connect.KeyVault;
 import com.fxratecentral.connect.util.HttpUtil;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
-public final class Binance extends CandlestickProvider {
+public final class Binance extends AbstractCandlestickProvider {
     private static final String VALUE_ACCESS_KEY = "BNNC_ACCESS_KEY";
     private static final String VALUE_SECRET_KEY = "BNNC_SECRET_KEY";
     private static final String BASE_URI = "https://api.binance.com";
@@ -20,19 +20,19 @@ public final class Binance extends CandlestickProvider {
     private static final int MAX_KLINES_PER_REQUEST = 1000;
 
     public Binance(
-            final HttpUtil httpUtil,
-            final SignatureUtil signatureUtil,
-            final KeyVault keyVault
+        final HttpUtil httpUtil,
+        final SignatureUtil signatureUtil,
+        final KeyVault keyVault
     ) {
         super(httpUtil, signatureUtil, keyVault);
     }
 
     @Override
     public Collection<Candlestick> getCandlesticks(
-            final CurrencyPair currencyPair,
-            final Instant startInclusive,
-            final Instant endExclusive,
-            final TemporalUnit temporalUnit
+        final CurrencyPair currencyPair,
+        final Instant startInclusive,
+        final Instant endExclusive,
+        final TemporalUnit temporalUnit
     ) {
         if (startInclusive.until(endExclusive, temporalUnit) > MAX_KLINES_PER_REQUEST) {
             throw new BinanceException("Too many klines requested.");
@@ -42,20 +42,20 @@ public final class Binance extends CandlestickProvider {
         final var startTime = String.valueOf(startInclusive.toEpochMilli());
         final var endTime = String.valueOf(endExclusive.minus(1, temporalUnit).toEpochMilli());
         return getKLines(symbol, interval, startTime, endTime, MAX_KLINES_PER_REQUEST)
-                .stream()
-                .map(BinanceKLineConverter::convert)
-                .toList();
+            .stream()
+            .map(BinanceKLineConverter::convert)
+            .toList();
     }
 
     /**
      * @see <a href="https://binance-docs.github.io/apidocs/spot/en/#kline-candlestick-data">kline-candlestick-data</a>
      */
     private Collection<BinanceKLine> getKLines(
-            final String symbol,
-            final String interval,
-            final String startTime,
-            final String endTime,
-            final int limit
+        final String symbol,
+        final String interval,
+        final String startTime,
+        final String endTime,
+        final int limit
     ) {
         final var endpoint = "/api/v3/klines";
         final var queryParameters = new LinkedHashMap<String, Object>();
@@ -65,15 +65,15 @@ public final class Binance extends CandlestickProvider {
         queryParameters.put("endTime", endTime);
         queryParameters.put("limit", limit);
         return Arrays.stream(get(Object[][].class, endpoint, queryParameters, false))
-                .map(BinanceKLineConverter::convert)
-                .toList();
+            .map(BinanceKLineConverter::convert)
+            .toList();
     }
 
     private <T> T get(
-            final Class<T> responseClass,
-            final String endpoint,
-            final LinkedHashMap<String, Object> queryParameters,
-            final boolean sign
+        final Class<T> responseClass,
+        final String endpoint,
+        final LinkedHashMap<String, Object> queryParameters,
+        final boolean sign
     ) {
         final var nonce = String.valueOf(Instant.now().toEpochMilli());
         final var data = "timestamp=" + nonce;
@@ -81,7 +81,7 @@ public final class Binance extends CandlestickProvider {
         final var secretKey = keyVault.get(VALUE_SECRET_KEY);
         final var signature = signatureUtil.sign(secretKey, data);
         final var headers = new String[]{
-                HEADER_BNNC_ACCESS_KEY, accessKey,
+            HEADER_BNNC_ACCESS_KEY, accessKey,
         };
         if (sign) {
             queryParameters.put("timestamp", nonce);

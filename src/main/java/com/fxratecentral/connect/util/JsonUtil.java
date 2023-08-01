@@ -17,7 +17,7 @@ public final class JsonUtil {
         return gson.toJson(object);
     }
 
-    public <T> T fromJson(final String json, Class<T> targetClass) {
+    public <T> T fromJson(final String json, final Class<T> targetClass) {
         return gson.fromJson(json, targetClass);
     }
 }

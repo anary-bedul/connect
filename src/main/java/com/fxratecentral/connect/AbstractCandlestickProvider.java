@@ -6,15 +6,15 @@ import java.time.Instant;
 import java.time.temporal.TemporalUnit;
 import java.util.Collection;
 
-public abstract class CandlestickProvider {
+public abstract class AbstractCandlestickProvider {
     protected final HttpUtil httpUtil;
     protected final SignatureUtil signatureUtil;
     protected final KeyVault keyVault;
 
-    protected CandlestickProvider(
-            final HttpUtil httpUtil,
-            final SignatureUtil signatureUtil,
-            final KeyVault keyVault
+    protected AbstractCandlestickProvider(
+        final HttpUtil httpUtil,
+        final SignatureUtil signatureUtil,
+        final KeyVault keyVault
     ) {
         this.httpUtil = httpUtil;
         this.signatureUtil = signatureUtil;
@@ -22,9 +22,9 @@ public abstract class CandlestickProvider {
     }
 
     public abstract Collection<Candlestick> getCandlesticks(
-            final CurrencyPair currencyPair,
-            final Instant startInclusive,
-            final Instant endExclusive,
-            final TemporalUnit temporalUnit
+        CurrencyPair currencyPair,
+        Instant startInclusive,
+        Instant endExclusive,
+        TemporalUnit temporalUnit
     );
 }

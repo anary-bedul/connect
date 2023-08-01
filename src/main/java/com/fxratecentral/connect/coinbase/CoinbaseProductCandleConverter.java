@@ -11,12 +11,12 @@ public final class CoinbaseProductCandleConverter {
 
     public static Candlestick convert(final CoinbaseProductCandle coinbaseProductCandle) {
         return new Candlestick(
-                Instant.ofEpochSecond(Long.parseLong(coinbaseProductCandle.start())),
-                new BigDecimal(coinbaseProductCandle.open()),
-                new BigDecimal(coinbaseProductCandle.high()),
-                new BigDecimal(coinbaseProductCandle.low()),
-                new BigDecimal(coinbaseProductCandle.close()),
-                new BigDecimal(coinbaseProductCandle.volume())
+            Instant.ofEpochSecond(Long.parseLong(coinbaseProductCandle.start())),
+            new BigDecimal(coinbaseProductCandle.open()),
+            new BigDecimal(coinbaseProductCandle.high()),
+            new BigDecimal(coinbaseProductCandle.low()),
+            new BigDecimal(coinbaseProductCandle.close()),
+            new BigDecimal(coinbaseProductCandle.volume())
         );
     }
 }
